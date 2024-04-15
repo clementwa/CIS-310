@@ -1,0 +1,10 @@
+5. Retrieve property ID and Serivce ID that have Service Request that have an estimate hour >=1 and <=6, and have a valid number of hours.
+
+SELECT PROPERTY_ID, SERVICE ID
+FROM SERVICE_REQUEST 
+WHERE EST_HOUR BETWEEN 1 AND 6 AND IS NOT NULL;
+
+6. Get the average square footage of properties with a monthly rent greater than $2000 owned by an owner whose last name starts with 'M'.
+SELECT AVG(SQR_FT)
+FROM PROPERTY
+WHERE MONTHLY_RENT > 2000 (SELECT LAST_NAME FROM OWNER WHERE LAST_NAME LIKE 'M%');

@@ -1,0 +1,124 @@
+--==============================
+--====CIS310 ASSIGNMENT 8=======
+--==============================
+
+ 
+
+/*
+STUDENT NAME: CLEMENT TWAGIRAMUNGU
+STUDENT ID: 5408364
+SUBMISSION DATE: 4/17/2023
+*/
+
+ 
+
+--==============================Part 1: Table Creation& Modification======================================
+--1.Create a LARGE_PROPERTY table with the structure shown below, no primary keys are defined in this table.
+/*
+===Column Name == | ==Data Type===
+|   OFFICE_NUM    |  DECIMAL(2)
+|   ADDRESS       |  CHAR(25)
+|   BDRMS         |  DECIMAL(2)
+|   FLOORS        |  DECIMAL(2)
+|   MONTHLY_RENT  |  DECIMAL(6,2)
+|   OWNER_NUM     |  CHAR(5)
+*/
+
+ 
+
+CREATE TABLE LARGE_PROPERTY ( --  creates tables for LARGE_PROPERTY using the data listed data types
+OFFICE_NUM DECIMAL(2, 0) NOT NULL,
+ADDRESS CHAR(25) NOT NULL,
+BDRMS DECIMAL(2, 0),
+FLOORS DECIMAL(2, 0),
+MONTHLY_RENT DECIMAL(6, 2),
+OWNER_NUM CHAR(5),
+); 
+
+
+--2.Insert into the LARGE_PROPERTY table the office number, address, bedrooms, baths, 
+--monthly rent, and owner number for those properties whose square footage is greater than 1,500 square feet.
+
+INSERT INTO LARGE_PROPERTY (OFFICE_NUM, ADDRESS, BDRMS, FLOORS, MONTHLY_RENT, OWNER_NUM) --inserts data into LARGE_PROPERTY table
+SELECT OFFICE_NUM, ADDRESS, BDRMS, FLOORS, MONTHLY_RENT, OWNER_NUM --retrives listed data (ex. office number) from property table
+FROM PROPERTY
+WHERE SQR_FT > 1500; --retrived data must include proporties who square footage is greater than 1,500 square feet
+
+ 
+--3.StayWell has increased the monthly rent of each large property by $150. 
+--Update the monthly rents in the LARGE_PROPERTY table accordingly.
+
+UPDATE LARGE_PROPERTY --updates LARGE_PROPERTY table
+SET MONTHLY_RENT = (MONTHLY_RENT + 150); -- sets rent price for LARGE_PROPERTY table with an increase of $150
+
+
+--4.After increasing the monthly rent of each large property by $150 (Exercise 3), 
+--StayWell decides to decrease the monthly rent of any property 
+--whose monthly fee is more than $1750 by one percent. 
+--Update the monthly rents in the LARGE_PROPERTY table accordingly.
+
+UPDATE LARGE_PROPERTY --updates LARGE_PROPERTY table
+SET MONTHLY_RENT = (MONTHLY_RENT) - (0.01 * MONTHLY_RENT) - sets rent price for LARGE_PROPERTY table with a decrease of one percent  
+WHERE MONTHLY_RENT > 1750; -- for propertires where monthly rent is greater than $1750
+
+ 
+--5. Insert a row into the LARGE_PROPERTY table for a new property. The office number is 1, 
+--the address is 2643 Lugsi Dr, the number of bedrooms is 3, the number of floors is 2, 
+--the monthly rent is $775, and the owner number is MA111.
+
+INSERT INTO LARGE_PROPERTY (OFFICE_NUM, ADDRESS, BDRMS, FLOORS, MONTHLY_RENT, OWNER_NUM) -- inserts listed data into LARGE_PROPERTY table 
+VALUES (1, '2643 Lugsi Dr.', 3, 2, 775.00, 'MA111'); --values associated with data above inserted in LARGE_PROPERTY table 
+
+ 
+--6. Delete all properties in the LARGE_PROPERTY table for which the owner number is BI109.
+
+DELETE FROM LARGE_PROPERTY --deletes data/properties in LARGE_PROPERTY table
+WHERE OWNER_NUM = 'BI109'; --specifically where owner name is BI109
+
+
+--7.The property in managed by Columbia City with the address 105 North Illinois Rd is 
+--in the process of being remodeled and the number of bedrooms is unknown. 
+--Change the bedrooms value in the LARGE_PROPERTY table to null.
+ 
+UPDATE LARGE_PROPERTY --updates LARGE_PROPERTY table 
+SET BDRMS = NULL --set bedroom value to null
+WHERE ADDRESS = '105 North Illinois Rd.'; --specifically where the address is 105 North Illinois Rd
+
+
+--8. Delete the LARGE_PROPERTY table from the database.
+DELETE FROM LARGE_PROPERTY; --deletes LARGE_PROPERTY from the database
+
+ 
+--==============================Part 2: Views, Procedures and Triggers======================================
+-- 9. Create a Stored Procedure DISP_OWNER_YOURFIRSTNAMELASTNAME (E.G. DISP_OWNER_JIAOWANG).
+--This SP takes a single parameter/variable named I_PROPERTY_ID to store user input value of a PROPERTY_ID. 
+--It should output OFFICE_NUM, ADDRESS, OWNER_NUM and OWNER_NAME (concatenated FirstName LastName in proper format) 
+--from the PROPERTY and OWNER tables for the given PROPERTY_ID
+ 
+CREATE PROCEDURE DISP_OWNER_CLEMENTTWAGIRAMUNGU --create stored procedure 
+    @I_PROPERTY_ID INT --parameter/variable name 
+AS
+BEGIN --starts process
+    SELECT P.OFFICE_NUM, P.ADDRESS, O.OWNER_NUM, -lists listed data
+        CONCAT(O.FIRST_NAME, ' ', O.LAST_NAME) AS OWNER_NAME
+    FROM PROPERTY P -- from PROPERTY P table
+    JOIN OWNER O ON P.OWNER_NUM = O.OWNER_NUM -- joins to OWNER O able
+    WHERE P.PROPERTY_ID = @I_PROPERTY_ID; -- specfically where property id is I_PROPERTY_ID
+END -- ends process
+
+ 
+-- 10. Create a Stored Procedure UPDATE_OWNER_YOURFIRSTNAMELASTNAME (E.G. UPDATE_OWNER_JIAOWANG).
+--This Stored Procedure takes 2 parameters/variables:  
+--I_OWNER_NUM to store user input value of a OWNER_NUM, and I_LAST_NAME to store user input value of a new LAST_NAME. 
+--This stored procedure should update/change the last name to the given value, for the given owner num.    
+
+CREATE PROCEDURE UPDATE_OWNER_CLEMENTTWAGIRAMUNGU--create store procedure to make updates
+    @I_OWNER_NUM INT, -- first parameter/variable
+    @I_LAST_NAME VARCHAR(50) - second parameter.variable
+AS
+BEGIN --starts process
+    UPDATE OWNER --updates owner
+    SET LAST_NAME = @I_LAST_NAME -sets last name
+    WHERE OWNER_NUM = @I_OWNER_NUM; - specifically where owner name is I_OWNER_NUM
+END --ends process
+

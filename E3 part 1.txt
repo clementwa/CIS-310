@@ -1,0 +1,54 @@
+--1. List the first name and last name of every property owner from Washington (WA) or New York (NY) 
+SELECT FIRST_NAME, LAST_NAME 
+FROM OWNER
+WHERE STATE = 'WA' OR STATE = 'NY';
+
+--2. List the property ID and address for every property whose square footage is greater than 1,100 square feet in descending order 
+SELECT PROPERTY_ID, ADDRESS 
+FROM PROPERTY 
+WHERE SQR_FT > 1100
+ORDER BY PROPERTY_ID DESC;
+
+--3. List the average square footage of each property whose address contains "Ave" 
+SELECT AVG (SQR_FT)
+FROM PROPERTY 
+WHERE ADDRESS LIKE '%Ave%';
+
+--4. List the number of valid property ID for every property where that is mananged by StayWell-Colombia City
+SELECT COUNT(PROPERTY_ID)
+FROM PROPERTY 
+WHERE PROPERTY_ID IS NOT NULL AND OFFICE_NUM = (SELECT OFFICE_NUM FROM OFFICE WHERE OFFICE_NAME = 'StayWell-Colombia City');
+
+--5. List the properties with bedrooms between 2 and 6 managed by each office
+SELECT OFFICE_NUM
+FROM PROPERTY 
+WHERE BDRMS BETWEEN 2 AND 6
+GROUP BY OFFICE_NUM;
+
+--6. List highest amount of hours spent on a serivce request using the column name MAX_REQUEST HOURS
+SELECT MAX(SPENT_HOURS) AS MAX_REQUEST_HOURS
+FROM SERVICE_REQUEST;
+
+--7. List the lowest amount of estimated hours when the status is not 'open'
+SELECT MIN(EST_HOURS)
+FROM SERVICE_REQUEST
+WHERE NOT STATUS = 'Open'; 
+
+--8. List the owner number and first name for all owners who live in the zip codes 89508, 97203, 83303
+SELECT OWNER_NUM, LAST_NAME 
+FROM OWNER 
+WHERE ZIP_CODE IN (89508, 97203, 83303);
+---
+--9. List the states of property owners are from without any duplicates
+SELECT DISTINCT (STATE)
+FROM OWNER; 
+
+--10. List the total number of bedrooms in each property.
+SELECT SUM (BDRMS)
+FROM PROPERTY;
+
+--11. List the cites in which the owners live in as well as the cities where the offices are located. Sort the results by city 
+SELECT CITY FROM OWNER
+UNION ALL
+SELECT CITY FROM OFFICE
+ORDER BY CITY;

@@ -1,0 +1,59 @@
+CLEMENT TWAGIRAMUNGU
+5408364
+4/17/2023
+
+--14. Which California bike shop helped sell the most bikes (by value) in 2003?
+--StoreID    StoreName    City    SumOfSalePric
+
+USE BIKE; --connects to BIKE database
+SELECT TOP 1 STOREID -- returns 1 StoreID record 
+FROM BICYCLE B --retrived from Bicycle table
+INNER JOIN CUSTOMERTRANSACTION CT ON B.EMPLOYEEID = CT.EMPLOYEEID --innerjoins CustomerTransaction table
+WHERE YEAR(ORDERDATE) = 2003 AND SALESTATE = 'CA' AND B.SALEPRICE > '0' --locates data specificed year, sale, and saleprice (greater than zero)
+GROUP BY STOREID -- results grouped by StoreID
+ORDER BY SUM(B.SALEPRICE) DESC; --results ordered by sum of saleprice in descending order 
+
+--15. What is the total weight of the components on bicycle 11356?
+--TotalWeight
+USE BIKE; --connects to BIKE database
+
+SELECT SUM(C.WEIGHT) AS TOTALWEIGHT --lists sum of weight as TotalWeight
+FROM BIKEPARTS B --retrived from BIKEPARTS table
+INNER JOIN COMPONENT C ON B.COMPONENTID = C.COMPONENTID --inners component table
+WHERE B.SERIALNUMBER = '11356'; --located data where serial number = '11356'
+
+
+--16. What is the total list price of all items in the 2002 Campy Record groupo?
+--GroupName    SumOfListPrice
+
+USE BIKE; --connects to BIKE database
+
+SELECT G.GROUPNAME, SUM(C.LISTPRICE) AS SUMOFLISTPRICE --lists groupname and sum of list price as SumOfListPrice
+FROM GROUPO G --retrived from Groupo table
+INNER JOIN GROUPCOMPONENTS GC ON G.COMPONENTGROUPID = GC.GROUPID --innerjoins groupcomponents table
+INNER JOIN COMPONENT C ON C.COMPONENTID = GC.COMPONENTID --innerjoins component table
+WHERE GROUPNAME = 'CAMPY RECORD 2002' --locates data where groupname is 'CAMP RECORD 2002'
+GROUP BY GROUPNAME; --results grouped by GroupName
+
+--17. In 2003, were more race bikes built from carbon or titanium (based on the down tube)?
+--Material    CountOfSerialNumber 
+
+USE BIKE; --connects to BIKE database
+SELECT TOP 1 TM.MATERIAL, COUNT(BT.SERIALNUMBER) AS COUNTOFSERIALNUMBER --return 1 record and display number of serial numbers as "CountofSerialNumber"
+FROM TUBEMATERIAL TM --retrive record from Tubematerial table 
+INNER JOIN BICYCLETUBEUSAGE BT ON BT.TUBEID = TM.TUBEID --innerjoins BicycleTubeUsage table
+INNER JOIN BICYCLE B ON BT.SERIALNUMBER = B.SERIALNUMBER --innerjoins Bicycle table
+WHERE YEAR(STARTDATE) = '2003' AND B.MODELTYPE = 'RACE' AND (TM.MATERIAL = 'CARBON FIBER' OR TM.MATERIAL = 'TITANIUM') --locates specificed year/date, modeltype, and materials
+GROUP BY TM.MATERIAL --groups results by material
+ORDER BY COUNTOFSERIALNUMBER DESC; --listed in descending order
+
+--18. What is the average price paid for the 2001 Shimano XTR rear derailleurs?
+--AvgOfPricePaid
+
+USE BIKE; --connects to BIKE database
+SELECT AVG(PI.PRICEPAID) AS AVGOFPRICEPAID --lists average price paid as "AvgofPricePaid"
+FROM PURCHASEITEM PI INNER JOIN COMPONENT C ON PI.COMPONENTID = C.COMPONENTID -- innerjoins PurchaseItem table with Component table 
+INNER JOIN GROUPCOMPONENTS G ON G.COMPONENTID = PI.COMPONENTID --innerjoins GroupComponenet table
+INNER JOIN GROUPO GP ON GP.COMPONENTGROUPID = G.GROUPID --innerjoins Groupo table
+WHERE GP.GROUPNAME = 'SHIMANO XTR 2001' AND C.CATEGORY = 'REAR DERAILLEUR'; --locates where groupname is 'SHIMANO XTR 2001' and category is 'rear derailleurs'
+

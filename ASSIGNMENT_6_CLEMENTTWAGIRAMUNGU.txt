@@ -1,0 +1,76 @@
+--============================== 
+--====CIS310 ASSIGNMENT 6=======
+--==============================
+
+/*
+STUDENT NAME: Clement Twagiramungu
+STUDENT ID: 5408364
+SUBMISSION DATE: 03/24/2023
+*/
+
+--1. List the owner number, last name, and first name of every property owner.
+SELECT OWNER_NUM, LAST_NAME, FIRST_NAME 
+FROM OWNER; 
+
+--2. List the complete PROPERTY table (all rows and all columns).
+SELECT * FROM PROPERTY; 
+
+--3. List the last name and first name of every owner who lives in Seattle.
+SELECT LAST_NAME, FIRST_NAME 
+FROM OWNER 
+WHERE CITY = 'Seattle';
+
+--4. List the last name and first name of every owner who does not live in Seattle.
+SELECT LAST_NAME, FIRST_NAME 
+FROM OWNER 
+WHERE CITY != 'Seattle';
+
+--5. List the property ID and office number for every property whose square footage 
+--is equal to or less than 1,400 square feet.
+SELECT PROPERTY_ID, OFFICE_NUM 
+FROM PROPERTY 
+WHERE SQR_FT <= 1400;
+
+--6. List the office number and address for every property with three bedrooms.
+SELECT OFFICE_NUM, ADDRESS 
+FROM PROPERTY 
+WHERE BDRMS = 3;
+
+--7. List the property ID for every property with two bedrooms that is managed by StayWell-Georgetown
+--USE THE GIVEN NAME (*hint subquery). 
+SELECT PROPERTY_ID 
+FROM PROPERTY 
+WHERE BDRMS = 2 AND OFFICE_NUM = (SELECT OFFICE_NUM FROM OFFICE WHERE OFFICE_NAME = 'StayWell-Georgetown');
+
+--8. List the property ID for every property with a monthly rent that is between $1,350 and $1,750 
+--MUST USE PROPER OPERATOR FOR FULL CREDIT.
+SELECT PROPERTY_ID 
+FROM PROPERTY 
+WHERE MONTHLY_RENT BETWEEN 1350 AND 1750; 
+
+--9. Labor is billed at the rate of $35 per hour. 
+--List the property ID, category number, estimated hours, and estimated labor cost for every service request. 
+--Sort the results by the estimated cost from highest to lowest.
+--To obtain the estimated labor cost, multiply the estimated hours by 35. 
+--Use the column name ESTIMATED_COST for the estimated labor cost.
+SELECT PROPERTY_ID, CATEGORY_NUMBER, EST_HOURS, EST_HOURS*35 AS ESTIMATED_COST 
+FROM SERVICE_REQUEST
+ORDER BY ESTIMATED_COST DESC;
+
+--10. List the owner number and last name for all owners who live in Nevada (NV), Oregon (OR), or Idaho (ID)
+--USE THE APPROPRIATE OPERATOR FOR FULL CREDIT.
+SELECT OWNER_NUM, LAST_NAME 
+FROM OWNER 
+WHERE STATE IN ('NV', 'OR', 'ID');
+
+--11. List the owner number, property ID, square footage, and monthly rent for all properties. 
+--Sort the results by monthly rent within the square footage.
+SELECT OWNER_NUM, PROPERTY_ID, SQR_FT, MONTHLY_RENT
+FROM PROPERTY
+ORDER BY MONTHLY_RENT, SQR_FT; 
+
+--12. How many three-bedroom properties are managed by each office?
+SELECT COUNT(OFFICE_NUM) 
+FROM PROPERTY 
+WHERE BDRMS = 3
+GROUP BY OFFICE_NUM;
